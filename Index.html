@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mariam Abdelsalam | .NET & AI Engineer</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            forest: '#14532d',        // deep forest green
+                            emerald: '#059669',        // emerald accent
+                            'emerald-light': '#d1fae5', // light green background
+                            'emerald-soft': '#ecfdf5',  // softer green
+                            charcoal: '#2c2c2c',
+                            gray: '#f8f9fa',
+                            border: '#e2e6ea',
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
+                        'inner-soft': 'inset 0 1px 3px rgba(0,0,0,0.02)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            color: #2c2c2c;
+            background-color: #ffffff;
+        }
+        
+        /* Simple solid scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Utility for consistent focus states */
+        a:focus, button:focus {
+            outline: 2px solid #059669;
+            outline-offset: 2px;
+        }
+
+        /* subtle pattern for depth */
+        .depth-pattern {
+            background-image: radial-gradient(#d1d5db 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+        .depth-pattern-light {
+            background-image: radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+        }
+
+        /* card lift effect */
+        .project-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            border-color: #a7f3d0;
+        }
+
+        /* decorative corner accent */
+        .corner-accent {
+            position: relative;
+        }
+        .corner-accent::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            border-top: 3px solid #059669;
+            border-left: 3px solid #059669;
+            border-radius: 4px 0 0 0;
+            opacity: 0.3;
+        }
+
+        /* Headshot placeholder styling */
+        .headshot-placeholder {
+            background-color: #ecfdf5;
+            border: 2px dashed #a7f3d0;
+            transition: all 0.2s ease;
+        }
+        .headshot-placeholder:hover {
+            border-color: #059669;
+            background-color: #d1fae5;
+        }
+
+        /* Add project placeholder */
+        .add-project-placeholder {
+            border: 2px dashed #a7f3d0;
+            background-color: #ecfdf5;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .add-project-placeholder:hover {
+            border-color: #059669;
+            background-color: #d1fae5;
+        }
+
+        /* Carousel styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            flex-shrink: 0;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.85);
+            border: 1px solid #e2e6ea;
+            color: #14532d;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+        .carousel-btn:hover {
+            background-color: #059669;
+            color: white;
+            border-color: #059669;
+        }
+        .carousel-btn.prev {
+            left: 0.5rem;
+        }
+        .carousel-btn.next {
+            right: 0.5rem;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.375rem;
+            z-index: 10;
+        }
+        .carousel-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .carousel-dot.active {
+            background-color: #059669;
+            border-color: #059669;
+            transform: scale(1.2);
+        }
+
+        /* Placeholder image style */
+        .img-placeholder {
+            background-color: #f0fdf4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #14532d;
+            opacity: 0.7;
+        }
+        .img-placeholder i {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: #059669;
+            opacity: 0.6;
+        }
+        .img-placeholder span {
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="fixed w-full z-50 bg-white border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-xl font-bold text-brand-forest tracking-tight">Mariam Abdelsalam</a>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="#about" class="text-sm font-medium text-gray-600 hover:text-brand-emerald transition-colors">About</a>
+                    <a href="#skills" class="text-sm font-medium text-gray-600 hover:text-brand-emerald transition-colors">Skills</a>
+                    <a href="#work" class="text-sm font-medium text-gray-600 hover:text-brand-emerald transition-colors">Work</a>
+                    <a href="mailto:mariam.abd6606@gmail.com" class="px-4 py-2 bg-brand-forest text-white text-sm font-medium rounded hover:bg-emerald-800 transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-brand-forest p-2" aria-label="Toggle menu">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-brand-border">
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md mobile-link">About</a>
+                <a href="#skills" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md mobile-link">Skills</a>
+                <a href="#work" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md mobile-link">Work</a>
+                <a href="mailto:mariam.abd6606@gmail.com" class="block px-3 py-2 text-base font-medium text-brand-emerald hover:bg-gray-50 rounded-md">mariam.abd6606@gmail.com</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section with Headshot -->
+        <section id="about" class="relative pt-32 pb-20 md:pt-40 md:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <!-- subtle depth pattern behind text -->
+            <div class="absolute inset-0 depth-pattern-light opacity-40 pointer-events-none -z-10" style="mask-image: linear-gradient(to bottom, black 40%, transparent 80%);"></div>
+            
+            <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+                <!-- Text content -->
+                <div class="flex-1 max-w-3xl relative">
+                    <div class="mb-4 inline-flex items-center space-x-2 text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                        <i class="fas fa-location-dot text-brand-emerald"></i>
+                        <span>Cairo, Egypt</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-brand-forest tracking-tight leading-tight mb-4">
+                        Mariam Abdelsalam
+                    </h1>
+                    <h2 class="text-2xl md:text-3xl font-medium text-gray-600 mb-8">
+                        .NET Backend Developer & AI Engineer
+                    </h2>
+                    
+                    <div class="pl-6 border-l-4 border-brand-emerald mb-10">
+                        <p class="text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl font-medium">
+                            I bridge robust enterprise .NET backend engineering with intelligent Python/AI services—delivering high-performance, containerized RESTful architectures ready for real-world production.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="mailto:mariam.abd6606@gmail.com" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded bg-brand-forest text-white hover:bg-emerald-800 transition-colors shadow-sm">
+                            <i class="fas fa-envelope mr-2"></i> Get in Touch
+                        </a>
+                        <a href="#work" class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm">
+                            View Selected Work
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Headshot Placeholder -->
+                <div class="w-full lg:w-72 flex-shrink-0">
+                    <div class="headshot-placeholder rounded-2xl aspect-square w-full max-w-[280px] mx-auto lg:mx-0 flex flex-col items-center justify-center p-6 text-center">
+                        <i class="fas fa-user-circle text-5xl text-brand-emerald opacity-40 mb-3"></i>
+                        <p class="text-sm font-medium text-brand-forest opacity-70">Your headshot here</p>
+                        <p class="text-xs text-gray-500 mt-1">Professional photo (JPG/PNG)</p>
+                        <!-- You can replace this entire div with an <img> tag:
+                        <img src="your-photo.jpg" alt="Mariam Abdelsalam" class="rounded-2xl w-full h-full object-cover">
+                        -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="relative py-20 bg-brand-emerald-soft border-y border-brand-border">
+            <!-- pattern overlay -->
+            <div class="absolute inset-0 depth-pattern opacity-20 pointer-events-none"></div>
+            
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-brand-forest mb-4">Core Competencies</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl">A focused breakdown of my technical expertise across backend architecture, operations, and artificial intelligence.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Skill 1 -->
+                    <div class="bg-white p-6 border border-brand-border rounded-lg shadow-card hover:shadow-card-hover transition-shadow duration-200 corner-accent">
+                        <div class="text-brand-emerald mb-4">
+                            <i class="fas fa-server text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-forest mb-3">.NET Backend Architecture</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> ASP.NET Core Web API</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Clean Architecture</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Entity Framework Core</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Middleware & DI</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill 2 -->
+                    <div class="bg-white p-6 border border-brand-border rounded-lg shadow-card hover:shadow-card-hover transition-shadow duration-200 corner-accent">
+                        <div class="text-brand-emerald mb-4">
+                            <i class="fab fa-docker text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-forest mb-3">DevOps & Containerization</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Docker & Compose</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> CI/CD Pipelines</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> GitHub Actions</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Environment Orchestration</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill 3 -->
+                    <div class="bg-white p-6 border border-brand-border rounded-lg shadow-card hover:shadow-card-hover transition-shadow duration-200 corner-accent">
+                        <div class="text-brand-emerald mb-4">
+                            <i class="fas fa-network-wired text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-forest mb-3">AI Engineering & RAG</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Python & FastAPI</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> ChromaDB & FAISS</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> RAG Workflows</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> NLP Integration</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill 4 -->
+                    <div class="bg-white p-6 border border-brand-border rounded-lg shadow-card hover:shadow-card-hover transition-shadow duration-200 corner-accent">
+                        <div class="text-brand-emerald mb-4">
+                            <i class="fas fa-database text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-forest mb-3">Database & Design</h3>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> SQL Server & T-SQL</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> PostgreSQL</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> Relational Schema Design</li>
+                            <li class="flex items-start"><i class="fas fa-check text-brand-emerald mt-1 mr-2 text-xs"></i> SOLID Principles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Section -->
+        <section id="work" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-12">
+                    <h2 class="text-3xl font-bold text-brand-forest mb-4">Selected Work Samples</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl">Demonstrating practical application of backend engineering and AI integration.</p>
+                </div>
+
+                <!-- Featured space: ongoing work -->
+                <div class="mb-16 p-6 border border-dashed border-brand-border rounded-lg bg-brand-emerald-soft/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white border border-brand-border text-brand-emerald">
+                            <i class="fas fa-code-branch"></i>
+                        </span>
+                        <div>
+                            <h3 class="text-base font-semibold text-brand-forest">Dedicated space for ongoing work</h3>
+                            <p class="text-sm text-gray-600">Currently building a distributed task orchestrator with .NET and Python workers — details coming soon.</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-medium text-gray-500 bg-white px-3 py-1 rounded-full border border-brand-border whitespace-nowrap">In progress</span>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Project 1 with Carousel -->
+                    <div class="project-card flex flex-col md:flex-row gap-8 items-start p-8 border border-brand-border rounded-lg bg-white shadow-card">
+                        <div class="w-full md:w-2/5">
+                            <!-- Carousel -->
+                            <div class="carousel-container" data-carousel="1">
+                                <div class="carousel-track">
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 1</span>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 2</span>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="carousel-btn prev" aria-label="Previous image">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="carousel-btn next" aria-label="Next image">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <div class="carousel-dots">
+                                    <span class="carousel-dot active" data-slide="0"></span>
+                                    <span class="carousel-dot" data-slide="1"></span>
+                                    <span class="carousel-dot" data-slide="2"></span>
+                                </div>
+                            </div>
+                            <!-- Replace carousel with actual images:
+                            <img src="project1-1.jpg" alt="Project screenshot" class="rounded-lg w-full h-48 object-cover">
+                            -->
+                        </div>
+                        <div class="w-full md:w-3/5 space-y-6">
+                            <div>
+                                <div class="inline-block px-3 py-1 bg-brand-emerald-light text-brand-forest text-xs font-bold uppercase tracking-wider rounded mb-3 border border-emerald-200">
+                                    AI & Backend Architecture
+                                </div>
+                                <h3 class="text-2xl font-bold text-brand-forest mb-2">Containerized AI-Driven RAG Microservice</h3>
+                                <div class="flex flex-wrap gap-2 mt-3">
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">Python</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">FastAPI</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">Docker</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">ChromaDB/FAISS</span>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed mt-4">
+                                    An end-to-end Retrieval-Augmented Generation service wrapped in Python FastAPI and integrated into vector database stores.
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-forest mb-2">Key Deliverable</h4>
+                                    <p class="text-sm text-gray-600">Engineered a containerized vector store pipeline enabling reliable contextual text retrieval and seamless API consumption by client applications.</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-forest mb-2">Impact</h4>
+                                    <p class="text-sm text-gray-600">Achieved complete local container deployment under strict submission deadlines, validated by automated CI testing workflows.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 with Carousel -->
+                    <div class="project-card flex flex-col md:flex-row gap-8 items-start p-8 border border-brand-border rounded-lg bg-white shadow-card">
+                        <div class="w-full md:w-2/5">
+                            <!-- Carousel -->
+                            <div class="carousel-container" data-carousel="2">
+                                <div class="carousel-track">
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 1</span>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 2</span>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-slide">
+                                        <div class="img-placeholder w-full h-48 rounded-lg">
+                                            <i class="fas fa-image"></i>
+                                            <span>Project image 3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="carousel-btn prev" aria-label="Previous image">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="carousel-btn next" aria-label="Next image">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <div class="carousel-dots">
+                                    <span class="carousel-dot active" data-slide="0"></span>
+                                    <span class="carousel-dot" data-slide="1"></span>
+                                    <span class="carousel-dot" data-slide="2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-3/5 space-y-6">
+                            <div>
+                                <div class="inline-block px-3 py-1 bg-brand-emerald-light text-brand-forest text-xs font-bold uppercase tracking-wider rounded mb-3 border border-emerald-200">
+                                    ASP.NET Core / Enterprise
+                                </div>
+                                <h3 class="text-2xl font-bold text-brand-forest mb-2">Havenly Property Booking Platform</h3>
+                                <div class="flex flex-wrap gap-2 mt-3">
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">C#</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">ASP.NET Core MVC</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">EF Core</span>
+                                    <span class="px-2 py-1 bg-brand-gray text-gray-600 text-xs rounded border border-gray-200 font-medium">SQL Server</span>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed mt-4">
+                                    An Airbnb-style platform backend designed with a rigorous layered architecture, optimized relational database structure, and Entity Framework Core.
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-forest mb-2">Key Deliverable</h4>
+                                    <p class="text-sm text-gray-600">Designed relational database schemas and complex T-SQL procedures while serving dynamic data-bound web interfaces.</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-forest mb-2">Impact</h4>
+                                    <p class="text-sm text-gray-600">Ensured high codebase maintainability and optimized query performance through strict implementation of the repository and dependency injection patterns.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 — Add Project Placeholder -->
+                    <!-- <div class="add-project-placeholder rounded-lg p-10 flex flex-col items-center justify-center text-center min-h-[200px]">
+                        <i class="fas fa-plus-circle text-4xl text-brand-emerald opacity-50 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-brand-forest mb-1"></h3>
+                        <p class="text-sm text-gray-500 max-w-md"></p> -->
+                        <!-- 
+                        INSTRUCTIONS TO ADD A NEW PROJECT:
+                        1. Copy the entire <div class="project-card ..."> block from an existing project.
+                        2. Paste it here (replace this placeholder div).
+                        3. Update the title, description, tags, deliverables, impact, and carousel images.
+                        4. Give the carousel a unique data-carousel attribute value.
+                        -->
+                    </div>
+                </div>
+
+                <!-- subtle "more coming" note -->
+                <div class="mt-10 text-center text-sm text-gray-400 flex items-center justify-center gap-2">
+                    <i class="fas fa-arrow-down text-xs"></i>
+                    <span>Additional case studies and code samples available upon request.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-brand-emerald-soft border-t border-brand-border py-10 text-center relative">
+        <div class="absolute inset-0 depth-pattern-light opacity-20 pointer-events-none"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-bold text-brand-forest mb-2">Mariam Abdelsalam</h2>
+            <p class="text-gray-600 mb-6 text-sm">.NET Backend Developer & AI Engineer</p>
+            
+            <a href="mailto:mariam.abd6606@gmail.com" class="inline-flex items-center text-brand-emerald hover:text-emerald-800 font-medium transition-colors mb-8">
+                mariam.abd6606@gmail.com
+            </a>
+            
+            <p class="text-sm text-gray-500">
+                &copy; <span id="year"></span> Mariam Abdelsalam. Hand-crafted portfolio.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Set dynamic year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Logic
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Carousel Logic
+        document.querySelectorAll('[data-carousel]').forEach(container => {
+            const track = container.querySelector('.carousel-track');
+            const slides = container.querySelectorAll('.carousel-slide');
+            const dots = container.querySelectorAll('.carousel-dot');
+            const prevBtn = container.querySelector('.carousel-btn.prev');
+            const nextBtn = container.querySelector('.carousel-btn.next');
+            let currentIndex = 0;
+
+            function updateCarousel() {
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            function goTo(index) {
+                currentIndex = (index + slides.length) % slides.length;
+                updateCarousel();
+            }
+
+            prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+            nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => goTo(i));
+            });
+
+            // Optional: auto-advance every 5s
+            // setInterval(() => goTo(currentIndex + 1), 5000);
+        });
+    </script>
+</body>
+</html>
